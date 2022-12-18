@@ -4,14 +4,14 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
-import org.hibernate.tool.schema.spi.ExceptionHandler;
+import org.example.exception.ExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.env.Environment;
 
 import java.util.Properties;
 
@@ -22,16 +22,11 @@ public class Main implements CommandLineRunner {
   private static final String LOCAL_NODE_ID = "local";
   private static final String FORMAT = "csv";
   private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
-  @Value("${spring.datasource.url}")
-  private static String dbUrl;
-  @Value("${spring.datasource.username}")
-  private static String username;
-  @Value("${spring.datasource.password}")
-  private static String password;
-  @Value("${spring.datasource.driver-class-name}")
-  private static String driver;
   @Autowired
   private ExceptionHandler exceptionHandler;
+
+  @Autowired
+  private Environment env;
 
   public static void main(String[] args) {
     LOGGER.info("Starting Batch Application");
@@ -49,6 +44,11 @@ public class Main implements CommandLineRunner {
       // Read a CSV file with the header, and store it in a DataFrame
       Dataset<Row> df = sparkSession.read().format(FORMAT).option("header", "true")
           .load("src/main/resources/spark-data/Border_Crossing_Entry_Data.csv");
+
+      String username = env.getProperty("spring.datasource.username");
+      String dbUrl = env.getProperty("spring.datasource.jdbc-url");
+      String password = env.getProperty("spring.datasource.password");
+      String driver = env.getProperty("spring.datasource.driver-class-name");
 
       Properties props = new Properties();
       props.setProperty("user", username);

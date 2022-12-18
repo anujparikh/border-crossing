@@ -1,9 +1,12 @@
 package org.example.persistence.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Getter
 @Setter
@@ -11,6 +14,7 @@ import lombok.Setter;
 @Table(name = "port")
 public class Port {
 
+  @Id
   private Integer code;
   private String name;
   private String state;
