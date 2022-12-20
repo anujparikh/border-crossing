@@ -14,7 +14,6 @@ public class DBConfig {
   @Bean
   @ConfigurationProperties("spring.datasource")
   public DataSource getDataSource() {
-
     return DataSourceBuilder.create().build();
   }
 }
