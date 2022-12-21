@@ -1,23 +1,31 @@
 package org.example.persistence.model;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "port")
-public class Port {
+@NoArgsConstructor
+@RequiredArgsConstructor
+public class Port implements Serializable {
 
   @Id
+  @NonNull
   private Integer code;
+  @NonNull
   private String name;
+  @NonNull
   private String state;
+  @NonNull
   private String border;
 
   @Override

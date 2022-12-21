@@ -2,10 +2,11 @@ package org.example.transformation;
 
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 import org.example.mapper.CrossingMapper;
 import org.example.persistence.model.Crossing;
-import org.example.persistence.repository.CrossingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,14 +16,16 @@ import java.util.List;
 public class CrossingData {
 
   @Autowired
-  private CrossingRepository crossingRepository;
+  SparkSession sparkSession;
 
-  public void saveCrossingData(Dataset<Row> df) throws Exception {
+  public List<Crossing> crossingsDfToList(Dataset<Row> df) throws Exception {
     CrossingMapper crossingMapper = new CrossingMapper();
     JavaRDD<Row> rdd = df.toDF().toJavaRDD();
     JavaRDD<Crossing> crossingJavaRDD = rdd.map(crossingMapper);
-    List<Crossing> crossings = crossingJavaRDD.collect();
-    System.out.println(crossings.size());
-    crossingRepository.saveAll(crossings);
+    return crossingJavaRDD.collect();
+  }
+
+  public Dataset<Crossing> crossingListToDF(List<Crossing> crossings) throws Exception {
+    return sparkSession.createDataset(crossings, Encoders.bean(Crossing.class));
   }
 }

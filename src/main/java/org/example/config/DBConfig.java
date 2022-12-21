@@ -1,4 +1,4 @@
-package org.example.persistence;
+package org.example.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
