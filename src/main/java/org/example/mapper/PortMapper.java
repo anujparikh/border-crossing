@@ -12,12 +12,16 @@ public class PortMapper implements Function<Row, Port> {
     int portNameColId = 1;
     int stateColId = 2;
     int borderColId = 3;
+    int longitudeColId = 4;
+    int latitudeColId = 5;
 
     return new Port(
-        row.getInt(portCodeColId),
+        Integer.parseInt(row.getString(portCodeColId)),
         row.getString(portNameColId),
         row.getString(stateColId),
-        row.getString(borderColId)
+        row.getString(borderColId),
+        Double.parseDouble(row.getString(longitudeColId)),
+        Double.parseDouble(row.getString(latitudeColId))
     );
   }
 }

@@ -27,6 +27,10 @@ public class Port implements Serializable {
   private String state;
   @NonNull
   private String border;
+  @NonNull
+  private Double longitude;
+  @NonNull
+  private Double latitude;
 
   @Override
   public String toString() {
