@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Data
@@ -19,7 +21,7 @@ public class Measure implements Serializable {
 
   @javax.persistence.Id
   @GeneratedValue
-  private Long Id;
+  private Long measureId;
   @NonNull
   private String type;
 

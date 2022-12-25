@@ -6,9 +6,13 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Data
@@ -22,24 +26,17 @@ public class Crossing implements Serializable {
   @GeneratedValue
   private Long Id;
   @NonNull
-  private Integer portcode;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "code")
+  private Port port;
   @NonNull
   private String date;
   @NonNull
-  private String portname;
-
-  @NonNull
-  private String state;
-  @NonNull
-  private String border;
-  @NonNull
-  private String measure;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "measureId")
+  private Measure measure;
   @NonNull
   private String value;
-  @NonNull
-  private String longitude;
-  @NonNull
-  private String latitude;
   @NonNull
   private String point;
 }

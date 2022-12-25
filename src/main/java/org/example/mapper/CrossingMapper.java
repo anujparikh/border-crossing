@@ -1,34 +1,43 @@
 package org.example.mapper;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.sql.Row;
 import org.example.persistence.model.Crossing;
+import org.example.persistence.model.Measure;
+import org.example.persistence.model.Port;
+import org.example.persistence.repository.MeasureRepository;
+import org.example.persistence.repository.PortRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Component
+@RequiredArgsConstructor
 public class CrossingMapper implements Function<Row, Crossing> {
+
+  @NonNull
+  private Map<String, Measure> measureMapping;
+  @NonNull
+  private Map<Integer, Port> portMapping;
 
   @Override
   public Crossing call(Row row) {
-    int portNameColId = 0;
-    int stateColId = 1;
     int portCodeColId = 2;
-    int borderColId = 3;
     int dateColId = 4;
     int measureColId = 5;
     int valueColId = 6;
-    int latitudeColId = 7;
-    int longitudeColId = 8;
     int pointColId = 9;
 
     return new Crossing(
-        Integer.parseInt(row.getString(portCodeColId)),
+        portMapping.get(Integer.parseInt(row.getString(portCodeColId))),
         row.getString(dateColId),
-        row.getString(portNameColId),
-        row.getString(stateColId),
-        row.getString(borderColId),
-        row.getString(measureColId),
+        measureMapping.get(row.getString(measureColId)),
         row.getString(valueColId),
-        row.getString(latitudeColId),
-        row.getString(longitudeColId),
         row.getString(pointColId)
     );
   }

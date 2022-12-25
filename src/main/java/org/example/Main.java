@@ -4,12 +4,13 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.example.exception.ExceptionHandler;
+import org.example.persistence.model.Crossing;
 import org.example.persistence.model.Measure;
 import org.example.persistence.model.Port;
 import org.example.persistence.repository.CrossingRepository;
 import org.example.persistence.repository.MeasureRepository;
 import org.example.persistence.repository.PortRepository;
-import org.example.transformation.CrossingData;
+import org.example.transformation.CrossingTransformation;
 import org.example.transformation.MeasureTransformation;
 import org.example.transformation.PortTransformation;
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public class Main implements CommandLineRunner {
   private Properties mysqlProps;
 
   @Autowired
-  private CrossingData crossingData;
+  private CrossingTransformation crossingTransformation;
 
   @Autowired
   private PortTransformation portTransformation;
@@ -63,6 +64,7 @@ public class Main implements CommandLineRunner {
     SpringApplication.run(Main.class, args);
     LOGGER.info("Batch Application Finished");
   }
+
 
   @Override
   public void run(String... args) throws Exception {
@@ -105,7 +107,12 @@ public class Main implements CommandLineRunner {
       List<Measure> measures = measureTransformation.measuresDfToList(measuresDf);
       measureRepository.saveAll(measures);
 
+      List<Crossing> crossings = crossingTransformation.crossingsDfToList(df);
+      crossingRepository.saveAll(crossings);
+
     } catch (Exception ex) {
+      System.out.println(ex.getMessage());
+      ex.printStackTrace();
       exceptionHandler.handleException(ex);
       throw ex;
     }
